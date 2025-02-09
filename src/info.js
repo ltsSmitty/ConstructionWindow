@@ -1,4 +1,4 @@
-export const name = "construtction-window";
+export const name = "Construction-Window";
 export const authors = ["ltsSmitty"];
 export const license = "MIT";
 
