@@ -7,7 +7,6 @@ import { debug } from "~/utilities/logger";
 export type BuildDirection = "next" | "previous";
 
 export type TStore<T> = ReturnType<typeof store<T | undefined>>;
-export type TArrayStore<T> = ReturnType<typeof arrayStore<T[]>>;
 
 type BuildState = {
 	trackElementType: TStore<TrackElementType>;

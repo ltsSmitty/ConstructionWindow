@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
+		"experimentalDecorators": true,
 		"module": "ES2020",
 		"moduleResolution": "node",
 		"noFallthroughCasesInSwitch": true,

@@ -15,13 +15,6 @@ type TileElementItem<T extends TileElement> = {
 };
 
 /**
- * A specific track-based TileELementItem to keep typing cleaner
- */
-interface TrackElementItem extends TileElementItem<TrackElement> {
-	segment: Segment | null;
-}
-
-/**
  * Button group types
  */
 type CurveButton =
