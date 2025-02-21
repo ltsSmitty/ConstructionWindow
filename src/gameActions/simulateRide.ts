@@ -1,3 +1,5 @@
+import { debug } from "~/utilities/logger";
+
 export const simulateRide = (ride: number, activate: boolean): void => {
 	// use context.executeAction to call ridesetstatus with a type of 4, this ride, status of 3 and flags of 0
 	const simulationArgs = {
@@ -7,6 +9,6 @@ export const simulateRide = (ride: number, activate: boolean): void => {
 		flags: 0,
 	};
 	context.executeAction("ridesetstatus", simulationArgs, () => {
-		console.log(`Simulation started for ride ${ride}`);
+		debug(`Simulation started for ride ${ride}`);
 	});
 };

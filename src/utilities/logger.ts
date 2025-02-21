@@ -39,7 +39,7 @@ function stacktrace(): string {
 	return result;
 }
 
-const isDev = !!!process.env.BUILD;
+const isDev = true;
 /**
  * Enable stack-traces on errors in development mode.
  */

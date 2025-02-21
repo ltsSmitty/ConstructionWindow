@@ -23,13 +23,23 @@ type FinishedBuildState = {
 };
 
 type BuildStateStore = BuildState & {
+	/**
+	 * The build location which the TI says a new track should be placed to build it properly. This store's value gets computed upon change and the new value is stored in a private computedBuildLocation store.
+	 */
 	initialBuildLocation: TStore<CoordsXYZD>;
+	/**
+	 * Location after considering building forward/backward, inverted, up vs down, etc.
+	 * This may or may not be the same as the initialBuildLocation.
+	 */
 	computedBuildLocation: TStore<CoordsXYZD>;
+	/**
+	 * The finished build state is the build state holds either a finished build state or null (representing a non-complete build).
+	 */
 	finishedBuildState: TStore<FinishedBuildState>;
 };
 
 const defaultBuildState: BuildState = {
-	direction: store(),
+	direction: store("next"),
 	rideType: store(),
 	ride: store(),
 	trackElementType: store(),
@@ -48,7 +58,11 @@ const computedBuildLocation = ({
 	direction,
 	trackElementType,
 	initialBuildLocation,
-}: BuildStateStore) => {
+}: {
+	direction: TStore<BuildDirection>;
+	trackElementType: TStore<TrackElementType>;
+	initialBuildLocation: TStore<CoordsXYZD>;
+}) => {
 	return compute(
 		direction,
 		trackElementType,
@@ -91,22 +105,16 @@ const finishedBuildState = (buildState: BuildStateStore) => {
 };
 
 class BuildStateObj implements BuildStateStore {
-	trackElementType;
-	ride;
-	rideType;
-	direction;
-
-	constructor(props?: Partial<BuildState>) {
-		// TODO check for serialized values before setting from default
-		// and actually i'm overwriting, not setting the stores. should i be setting the stores?
-		// since this is supposed to be a singleton i'm not sure it matters
-		this.trackElementType = defaultBuildState.trackElementType;
-		this.ride = props?.ride ?? defaultBuildState.ride;
-		this.rideType = defaultBuildState.rideType;
-		this.direction = defaultBuildState.direction;
-	}
+	direction = defaultBuildState.direction;
+	rideType = defaultBuildState.rideType;
+	ride = defaultBuildState.ride;
+	trackElementType = defaultBuildState.trackElementType;
 	initialBuildLocation = store<CoordsXYZD>();
-	computedBuildLocation = computedBuildLocation(this);
+	computedBuildLocation = computedBuildLocation({
+		direction: this.direction,
+		trackElementType: this.trackElementType,
+		initialBuildLocation: this.initialBuildLocation,
+	});
 	finishedBuildState = finishedBuildState(this);
 }
 

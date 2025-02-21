@@ -8,7 +8,7 @@ const selectSegment = (isPressed: boolean): Segment | undefined => {
 	if (isPressed) {
 		debug(`selecting segment`);
 
-		// buttonState.updateControl({ button: "select", isPressed: "pressed" });
+		buttonState.updateControl({ button: "select", isPressed: "pressed" });
 
 		// open the picker tool
 		toggleXYPicker(

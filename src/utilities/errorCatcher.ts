@@ -1,3 +1,4 @@
+import { debug } from "~/utilities/logger";
 export function CatchErrors() {
 	return function (_target: any, propertyKey: string, descriptor: PropertyDescriptor) {
 		const originalMethod = descriptor.value;
@@ -5,8 +6,8 @@ export function CatchErrors() {
 		descriptor.value = function (...args: any[]) {
 			try {
 				return originalMethod.apply(this, args);
-			} catch (error) {
-				console.error(`Error in ${propertyKey}:`, error);
+			} catch (e) {
+				debug(`Error in ${propertyKey}:${e}`);
 			}
 		};
 
