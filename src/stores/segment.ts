@@ -156,6 +156,6 @@ class SegmentStore implements SegmentStoreState, SegmentStoreActions {
 	}
 }
 
-const segmentStore = new SegmentStore();
+const segmentState = new SegmentStore();
 
-export { segmentStore, type SegmentStore };
+export { segmentState, type SegmentStore };

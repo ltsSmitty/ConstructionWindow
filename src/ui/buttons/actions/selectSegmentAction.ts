@@ -1,7 +1,7 @@
 import { debug } from "~/utilities/logger";
 import { toggleXYPicker } from "~/ui/tools/xyPicker";
 import * as finder from "~/finder";
-import { segmentStore, trackElementsOnSelectedTile, buttonState } from "~/stores";
+import { segmentState, trackElementsOnSelectedTile, buttonState } from "~/stores";
 import { type Segment } from "~/track/segment";
 
 const selectSegment = (isPressed: boolean): Segment | undefined => {
@@ -21,7 +21,7 @@ const selectSegment = (isPressed: boolean): Segment | undefined => {
 				// if there's at least one, set that as the selected segment
 				if (trackElementsOnSelectedTile.get().length > 0) {
 					// set the segment state relative to the first one found.
-					segmentStore.updateSegmentSequence(
+					segmentState.updateSegmentSequence(
 						trackElementsOnSelectedTile.get()[0].segment
 					);
 				}
@@ -42,7 +42,7 @@ const selectSegment = (isPressed: boolean): Segment | undefined => {
 			}
 		);
 	}
-	return segmentStore.selectedSegment.get();
+	return segmentState.selectedSegment.get();
 };
 
 export default selectSegment;
