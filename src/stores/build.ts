@@ -1,4 +1,4 @@
-import { arrayStore, compute, store } from "openrct2-flexui";
+import { compute, store } from "openrct2-flexui";
 import { TrackElementType, RideType } from "~/constants";
 import { computeBuildLocation } from "~/track/computations/computeBuildLocation";
 import { debug } from "~/utilities/logger";

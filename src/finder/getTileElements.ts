@@ -6,7 +6,7 @@ import { isRideAStall } from "~/utilities/isRideAStall";
  * A specific track-based TileElementItem to keep typing cleaner
  */
 export interface TrackElementItem extends TileElementItem<TrackElement> {
-	segment: Segment | null;
+	segment?: Segment;
 }
 
 /**

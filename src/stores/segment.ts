@@ -1,9 +1,11 @@
 import { debug } from "~/utilities/logger";
 import { ArrayStore, arrayStore, store } from "openrct2-flexui";
-import { TStore } from "~/stores/build";
+import { TStore } from "~/stores";
 import { Segment } from "~/track/segment";
 import { AutoCatchErrors } from "~/utilities/errorCatcher";
 import createSegmentSequence from "~/track/computations/createSegmentSequence";
+import { TrackElementType } from "~/constants";
+import * as finder from "~/finder";
 
 interface SegmentStoreState {
 	segmentSequence: ArrayStore<Segment>;
@@ -38,7 +40,8 @@ class SegmentStore implements SegmentStoreState, SegmentStoreActions {
 		this.isCompleteCircuit = store(false);
 	}
 
-	updateSegmentSequence(initialSegment: Segment) {
+	updateSegmentSequence(initialSegment?: Segment) {
+		if (initialSegment == null) return;
 		const { sequence, indexOfInitialSegment } = createSegmentSequence(initialSegment);
 		this.segmentSequence.set(sequence);
 		this.selectedIndex.set(indexOfInitialSegment);
@@ -78,16 +81,36 @@ class SegmentStore implements SegmentStoreState, SegmentStoreActions {
 	 * Get the initial build location which a TI provides at the end of the segment sequence in the direction provided.
 	 * This location will need to be normalized to deal with track element type factors (e.g. segment sloped down, helixes, etc.)
 	 */
-	getBuildLocation(direction: BuildDirection) {
-		if (this.selectedIndex.get() == null) throw new Error("No selected index.");
-		const index = this.selectedIndex.get()!;
-		const segment = this.segmentSequence.get()[index];
-		if (segment == null) {
-			debug(`No segment found at index, ${index}`);
+	getBuildLocation(direction?: BuildDirection): CoordsXYZD | undefined {
+		if (direction == null) {
+			debug("SegmentSequence.getBuildLocation: direction is undefined");
 			return;
 		}
-		const { location } = segment;
-		return location;
+		const segments = this.segmentSequence.get();
+		if (direction == "next") {
+			// get the last value in segments, then get a TI there and get nextPosition()
+			const finalSegment = segments[segments.length - 1];
+			debug(
+				`SegmentSequence.getBuildLocation: final segment is ${
+					finalSegment?.trackType ? TrackElementType[finalSegment.trackType] : "null"
+				}`
+			);
+			const finalSegmentTI = finder.getTIAtSegment({ segment: finalSegment });
+			if (finalSegmentTI == null) {
+				debug(`SegmentSequence.getBuildLocation ${direction}: no TI found`);
+				return;
+			}
+			return finalSegmentTI.nextPosition ?? undefined;
+		}
+		// in the previous direction, get the 0th element and the previousPosition
+		// get the first value in segments, then get a TI there and get previousPosition()
+		const firstSegment = segments[0];
+		const firstSegmentTI = finder.getTIAtSegment(firstSegment);
+		if (firstSegmentTI == null) {
+			debug(`SegmentSequence.getBuildLocation ${direction}: no TI found`);
+			return;
+		}
+		return firstSegmentTI.previousPosition ?? undefined;
 	}
 
 	/** Set the selected segment to the index provided.
