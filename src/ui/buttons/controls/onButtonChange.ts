@@ -83,7 +83,7 @@ export const onButtonChange = ({
 			break;
 		}
 	}
-	debug(`What pieces could be built given the currently pressed buttons?`);
+	// debug(`What pieces could be built given the currently pressed buttons?`);
 
 	// const pitchButton = buttonModel.selectedPitch.get();
 	// const bankButton = buttonModel.selectedBank.get();

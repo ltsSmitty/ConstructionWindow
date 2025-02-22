@@ -71,9 +71,9 @@ const computedBuildLocation = ({
 			if (direction == null || trackElementType == null || initialBuildLocation == null) {
 				debug(
 					`Not all required values are set:
-					${direction},
-					${trackElementType},
-					${initialBuildLocation}`
+					Direction: ${direction},
+					Track element type: ${trackElementType},
+					Initial build location: ${initialBuildLocation}`
 				);
 				return;
 			}

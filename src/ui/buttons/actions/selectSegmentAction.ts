@@ -3,6 +3,7 @@ import { toggleXYPicker } from "~/ui/tools/xyPicker";
 import * as finder from "~/finder";
 import { segmentState, trackElementsOnSelectedTile, buttonState } from "~/stores";
 import { type Segment } from "~/track/segment";
+import { segmentPainter } from "~/stores/segmentPainter";
 
 const selectSegment = (isPressed: boolean): Segment | undefined => {
 	if (isPressed) {
@@ -31,9 +32,9 @@ const selectSegment = (isPressed: boolean): Segment | undefined => {
 
 				// TODO reimplement
 				// have to do this because the highlighter cancels at this stage
-				// segmentModel.segmentState.segmentPainter.highlightRangeUnderSegment({
-				// 	segment: segmentState.selectedSegment.get(),
-				// });
+				segmentPainter.highlightRangeUnderSegment({
+					segment: segmentState.selectedSegment.get(),
+				});
 				buttonState.updateControl({
 					button: "select",
 					isPressed: "notPressed",

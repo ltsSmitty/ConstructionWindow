@@ -1,3 +1,8 @@
+/** Helper to be used with StaticBuildModel after validating the values exist */
+type NonNullableObject<T> = {
+	[K in keyof T]: NonNullable<T[K]>;
+};
+
 /** Whether pointed forward (next), in the standard direction cars get launched, or backward (previous) */
 type BuildDirection = "next" | "previous";
 
