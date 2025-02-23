@@ -10,7 +10,7 @@ export const getTIAtSegment = ({
 	segment?: Segment | null;
 	ride?: number;
 	location?: CoordsXYZD;
-}): TrackIterator | null => {
+}): TrackIterator | undefined => {
 	let thisRide: number;
 	let thisLocation: CoordsXYZD;
 	// debug(`Getting Ti at segment. Segment is ${JSON.stringify(segment)} and ride is ${ride} and location is ${JSON.stringify(location)}`);
@@ -26,20 +26,20 @@ export const getTIAtSegment = ({
 		debug(
 			`finder.getTIAtSegment: No segment or ride & location provided to getTIAtSegment. Returning null`
 		);
-		return null;
+		return;
 	}
 
 	// debug(`Getting specific track element.`);
 	const thisSegmentIndex = getSpecificTrackElement(thisRide, thisLocation)?.index ?? null; // needed for iterator
 	if (thisSegmentIndex == null) {
 		debug(`There was an issue getting the specific track element to get next segment options.`);
-		return null;
+		return;
 	}
 	const newTI = map.getTrackIterator({ x: thisLocation.x, y: thisLocation.y }, thisSegmentIndex); // set up TI
 
 	if (newTI == null) {
 		debug(`There was an issue creating the track iterator to get next segment options.`);
-		return null;
+		return;
 	}
 	// debug(`New TI is created at position (${newTI.position.x}, ${newTI.position.y}, ${newTI.position.z}) dir ${newTI.position.direction}.`);
 	return newTI;

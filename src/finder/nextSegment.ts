@@ -2,6 +2,7 @@ import { debug } from "~/utilities/logger";
 import { getTrackElements, TrackElementItem } from "~/finder/getTileElements";
 import { Segment } from "~/track/segment";
 
+export type NextSegmentType = "ghost" | "real" | undefined;
 /**
  * For a given segment, return whether or not a next segment exists and if so, what it is.
  */
@@ -10,11 +11,12 @@ export const doesSegmentHaveNextSegment = ({
 	tiAtSegment,
 	buildDirection,
 }: {
-	selectedSegment: Segment | null;
+	selectedSegment: Segment | undefined;
 	tiAtSegment: TrackIterator;
-	buildDirection: "next" | "previous" | null;
-}): null | "ghost" | "real" => {
+	buildDirection?: "next" | "previous";
+}): NextSegmentType => {
 	// create a copy of the TI to safely iterate through the track
+	// new note: this isn't actually cloning. i wonder if it's ok
 	const thisTI = tiAtSegment;
 
 	if (selectedSegment == null || thisTI.nextPosition == null) {
@@ -25,18 +27,18 @@ export const doesSegmentHaveNextSegment = ({
 					: "tiAtSegment.nextPosition is null"
 			}`
 		);
-		return null;
+		return;
 	}
 	if (buildDirection == null) {
 		debug(`buildDirection is null`);
-		return null;
+		return;
 	}
 	const followingPosition =
 		buildDirection === "next" ? thisTI.nextPosition : thisTI.previousPosition;
 
 	if (followingPosition == null) {
 		debug(`followingPosition is null`);
-		return null;
+		return;
 	}
 
 	const { x, y, z, direction } = followingPosition; // location of next track element
@@ -44,7 +46,7 @@ export const doesSegmentHaveNextSegment = ({
 
 	if (trackELementsOnNextTile.length === 0) {
 		debug(`No track elements on next tile`);
-		return null;
+		return;
 	}
 
 	// make sure the ride matches this ride
@@ -103,7 +105,7 @@ export const doesSegmentHaveNextSegment = ({
 			)}`
 		);
 
-		return null;
+		return;
 	}
 
 	if (trackForThisRide.length > 1) {

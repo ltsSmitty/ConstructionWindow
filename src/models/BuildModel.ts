@@ -6,7 +6,7 @@ import { TStore } from "~/stores";
 import { debug } from "~/utilities/logger";
 
 export type SuccessProps =
-	| { success: true; reason: undefined }
+	| { success: true; reason?: undefined }
 	| { success: false; reason: string };
 
 export type StaticBuildModel = {
