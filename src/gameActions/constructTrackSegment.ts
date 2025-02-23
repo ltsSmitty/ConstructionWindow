@@ -11,11 +11,11 @@ export const constructTrackSegment = ({
 	location,
 	constructionOption,
 	actionType,
-	callback,
+	onCompute,
 }: NonNullableObject<StaticBuildModel> & {
 	constructionOption: ConstructionOptions;
 	actionType: ActionType;
-	callback?: (v: SuccessProps) => void;
+	onCompute?: (v: SuccessProps) => void;
 }) => {
 	const constructArgs: TrackPlaceArgs = {
 		...location,
@@ -32,9 +32,9 @@ export const constructTrackSegment = ({
 	context[actionType]("trackplace", constructArgs, (v) => {
 		if (v.error != null) {
 			debug(`${actionType}: Failed to construct track segment: ${v.error}`);
-			callback ? callback({ success: false, reason: v.errorMessage ?? "" }) : null;
+			onCompute ? onCompute({ success: false, reason: v.errorMessage ?? "" }) : null;
 		}
 		debug(`${actionType}: Successfully constructed track segment.`);
-		callback ? callback({ success: true, reason: undefined }) : null;
+		onCompute ? onCompute({ success: true, reason: undefined }) : null;
 	});
 };

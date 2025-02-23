@@ -57,7 +57,7 @@ class BuildModelObj implements BuildModel {
 					rideType,
 					trackElementType,
 					location,
-					callback: (v) => {
+					onCompute: (v) => {
 						this.isBuildValid.set(v);
 					},
 				});
@@ -67,7 +67,7 @@ class BuildModelObj implements BuildModel {
 					rideType,
 					trackElementType,
 					location,
-					callback: (v) => {
+					onCompute: (v) => {
 						this.isBuildValid.set(v);
 					},
 				});
@@ -75,7 +75,7 @@ class BuildModelObj implements BuildModel {
 		);
 	}
 
-	build = (options: ConstructionOptions) => {
+	build(options: ConstructionOptions) {
 		if (this.isBuildValid.get()?.success) {
 			constructTrackSegment({
 				rideId: this.rideId.get()!,
@@ -88,9 +88,9 @@ class BuildModelObj implements BuildModel {
 		} else {
 			debug(`Build is not valid: ${this.isBuildValid.get()?.reason}`);
 		}
-	};
+	}
 
-	demolish = (options?: ConstructionOptions | "both") => {
+	demolish(options?: ConstructionOptions | "both") {
 		if (this.isDemolishValid.get()?.success) {
 			demolishTrackSegment({
 				rideId: this.rideId.get()!,
@@ -103,7 +103,7 @@ class BuildModelObj implements BuildModel {
 		} else {
 			debug(`Demolish is not valid: ${this.isDemolishValid.get()?.reason}`);
 		}
-	};
+	}
 }
 
 const computeValid = ({
@@ -111,14 +111,14 @@ const computeValid = ({
 	rideType,
 	trackElementType,
 	location,
-	callback,
+	onCompute,
 	action,
 }: StaticBuildModel & {
-	callback: (v: SuccessProps) => void;
+	onCompute: (v: SuccessProps) => void;
 	action: "construct" | "demolish";
 }): void => {
 	if (rideId == null || rideType == null || trackElementType == null || location == null) {
-		callback({
+		onCompute({
 			success: false,
 			reason: "Not all required values are set.",
 		});
@@ -132,7 +132,7 @@ const computeValid = ({
 				location,
 				constructionOption: "ghost",
 				actionType: "queryAction",
-				callback,
+				onCompute,
 		  })
 		: demolishTrackSegment({
 				rideId,
@@ -141,7 +141,7 @@ const computeValid = ({
 				location,
 				constructionOption: "ghost",
 				actionType: "queryAction",
-				callback,
+				onCompute,
 		  });
 };
 

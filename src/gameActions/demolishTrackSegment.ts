@@ -2,6 +2,8 @@ import { ConstructionOptions, ActionType } from "~/gameActions/constructTrackSeg
 import { StaticBuildModel, SuccessProps } from "~/models/BuildModel";
 import { debug } from "~/utilities/logger";
 
+// TODO it might be worth it to make a "query then build" function to validate it in the step in case something has changed before building
+
 export const demolishTrackSegment = ({
 	rideId,
 	rideType,
@@ -9,11 +11,11 @@ export const demolishTrackSegment = ({
 	location,
 	constructionOption,
 	actionType,
-	callback,
+	onCompute,
 }: NonNullableObject<StaticBuildModel> & {
 	constructionOption: ConstructionOptions | "both";
 	actionType: ActionType;
-	callback?: (v: SuccessProps) => void;
+	onCompute?: (v: SuccessProps) => void;
 }) => {
 	const constructArgs: TrackPlaceArgs = {
 		...location,
@@ -30,9 +32,9 @@ export const demolishTrackSegment = ({
 	context[actionType]("trackremove", constructArgs, (v) => {
 		if (v.error != null) {
 			debug(`${actionType}: Failed to construct track segment: ${v.error}`);
-			callback ? callback({ success: false, reason: v.errorMessage ?? "" }) : null;
+			onCompute ? onCompute({ success: false, reason: v.errorMessage ?? "" }) : null;
 		}
 		debug(`${actionType}: Successfully constructed track segment.`);
-		callback ? callback({ success: true, reason: undefined }) : null;
+		onCompute ? onCompute({ success: true, reason: undefined }) : null;
 	});
 };
